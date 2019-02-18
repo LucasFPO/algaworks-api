@@ -58,8 +58,9 @@ public class CategoriaResource {
 	// O código do "Location" criado irá ir para a variável "código" criada
 	// eu busco ele com o "findOne" e consigo retornar a categoria desejada
 	@GetMapping("/{codigo}")
-	public Categoria buscarPeloCodigo(@PathVariable Long codigo) {
-		return categoriaRepository.findOne(codigo);
+	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
+		 Categoria categoria = categoriaRepository.findOne(codigo);
+		 return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
 	
 }
