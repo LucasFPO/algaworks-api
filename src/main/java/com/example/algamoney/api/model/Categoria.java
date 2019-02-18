@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Table(name = "categoria")
 public class Categoria {
 
+	// O OBJETO É "categoriaRepository" e os atributos, propriedades são "codigo" e "nome"
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;

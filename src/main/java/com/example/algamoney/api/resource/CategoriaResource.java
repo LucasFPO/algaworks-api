@@ -60,6 +60,7 @@ public class CategoriaResource {
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
 		 Categoria categoria = categoriaRepository.findOne(codigo);
+		 // Se o código for inexistente, retorna 404, do contrario da o codigo certo //
 		 return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
 	
