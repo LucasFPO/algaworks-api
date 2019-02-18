@@ -1,11 +1,21 @@
 package com.example.algamoney.api.resource;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.repository.CategoriaRepository;
@@ -24,4 +34,32 @@ public class CategoriaResource {
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
 	}
+	
+	@PostMapping // Salvar a categoria
+	// Criando uma categoria ex: Financiamento no Postman, ela é salva aqui
+	/* @ResponseStatus(HttpStatus.CREATED)// ao terminar a execução do método, quero
+	// que retorne o status CREATED ("RESPONSE" SUBSTITUTIDO PELO CODIGO "RETURN" E "RESPONSEENTITY") */
+	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
+		// salva no Repositório Categoria
+		Categoria categoriaSalva = categoriaRepository.save(categoria);
+		// Metódo inteiro para criar o "Location" no Headers, respeitando o REST //
+		/*  Através da classe "ServletUriComponentsBuilders" que é o HELP do spring,
+		  eu vou com "fromCurrentRequestUri" pegar a partir da URI da requisição atual,
+		  que no caso é "/categorias", eu vou adicionar o "/{codigo}" na URI e
+		  , por fim, setar o Header "Location" nessa URI */
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
+				.buildAndExpand(categoriaSalva.getCodigo()).toUri();
+			response.setHeader("Location", uri.toASCIIString());
+	
+			// Cria o status e retorna na resposta "Response = resposta"
+			return ResponseEntity.created(uri).body(categoriaSalva);
+	}
+	
+	// O código do "Location" criado irá ir para a variável "código" criada
+	// eu busco ele com o "findOne" e consigo retornar a categoria desejada
+	@GetMapping("/{codigo}")
+	public Categoria buscarPeloCodigo(@PathVariable Long codigo) {
+		return categoriaRepository.findOne(codigo);
+	}
+	
 }

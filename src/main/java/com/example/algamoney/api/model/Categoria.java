@@ -6,7 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
+@Entity // Classe definida pelo próprio usuário, no caso: eu
+// com essa simples anotação, o JPA está apto a encontrar sua classe e fazer o que quiser
 @Table(name = "categoria")
 public class Categoria {
 
