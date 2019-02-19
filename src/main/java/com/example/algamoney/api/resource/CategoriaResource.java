@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +40,7 @@ public class CategoriaResource {
 	// Criando uma categoria ex: Financiamento no Postman, ela é salva aqui
 	/* @ResponseStatus(HttpStatus.CREATED)// ao terminar a execução do método, quero
 	// que retorne o status CREATED ("RESPONSE" SUBSTITUTIDO PELO CODIGO "RETURN" E "RESPONSEENTITY") */
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
+	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		// salva no Repositório Categoria
 		Categoria categoriaSalva = categoriaRepository.save(categoria);
 		// Metódo inteiro para criar o "Location" no Headers, respeitando o REST //

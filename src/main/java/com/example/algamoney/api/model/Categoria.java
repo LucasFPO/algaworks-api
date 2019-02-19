@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity // Classe definida pelo próprio usuário, no caso: eu
 // com essa simples anotação, o JPA está apto a encontrar sua classe e fazer o que quiser
@@ -16,6 +18,8 @@ public class Categoria {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
+	@NotNull // impede que o atributo nome seja igual ao valor "null"
+	@Size(min = 3, max = 20) // determina o tamanho do atributo tenha como valor um número entre esses valores
 	private String nome;
 
 	public Long getCodigo() {
