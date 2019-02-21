@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.repository.CategoriaRepository;
 
@@ -30,6 +32,9 @@ public class CategoriaResource {
 	@Autowired // Ache uma implementação de "CategoriaRepository" e injete no objeto 
 	// "categoriaRepository"
 	private CategoriaRepository categoriaRepository;
+	
+	@Autowired
+	private ApplicationEventPublisher publisher;
 	
 	@GetMapping // Mapeamento do MÉTODO/VERBO HTTP GET para a URL "/categorias"
 	public List<Categoria> listar() {
@@ -48,12 +53,15 @@ public class CategoriaResource {
 		  eu vou com "fromCurrentRequestUri" pegar a partir da URI da requisição atual,
 		  que no caso é "/categorias", eu vou adicionar o "/{codigo}" na URI e
 		  , por fim, setar o Header "Location" nessa URI */
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
+		/* URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{codigo}")
 				.buildAndExpand(categoriaSalva.getCodigo()).toUri();
 			response.setHeader("Location", uri.toASCIIString());
 	
 			// Cria o status e retorna na resposta "Response = resposta"
-			return ResponseEntity.created(uri).body(categoriaSalva);
+			return ResponseEntity.created(uri).body(categoriaSalva); */
+		
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
 	}
 	
 	// O código do "Location" criado irá ir para a variável "código" criada
