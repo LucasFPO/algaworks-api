@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,6 +25,7 @@ import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.service.PessoaService;
 
 @RestController
 @RequestMapping("/pessoas")
@@ -31,6 +33,9 @@ public class PessoaResource {
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private PessoaService pessoaService;
 	
 	@Autowired // Dispara o evento
 	private ApplicationEventPublisher publisher;
@@ -41,7 +46,7 @@ public class PessoaResource {
 		return pessoaRepository.findAll();
 	}
 	
-	@PostMapping
+	@PostMapping                               // Request = Requisição   
 	public ResponseEntity<Pessoa> criar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = pessoaRepository.save(pessoa);
 		
@@ -58,7 +63,7 @@ public class PessoaResource {
 	}
 	
 	@GetMapping("/{codigo}")
-	// "ResponseEntity" é para dar uma mensagem no Postman (ex: mensagem cliente: Invalida, mensagem servidor:...)
+	// "ResponseEntity" é para retornar uma mensagem no Postman (ex: mensagem cliente: Invalida, mensagem servidor:...)
 	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
 		Pessoa pessoa = pessoaRepository.findOne(codigo);
 		 return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
@@ -70,4 +75,18 @@ public class PessoaResource {
 	public void remover(@PathVariable Long codigo) {
 		pessoaRepository.delete(codigo);
 	}
+	
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo, @Valid @RequestBody Pessoa pessoa) {
+		// salva no banco de dados, fazendo a atualização de, no caso, "pessoa"
+		Pessoa pessoaSalva = pessoaService.atualizar(codigo, pessoa);
+		return ResponseEntity.ok(pessoaSalva);
+		
+		// O PUT também se utiliza do Event Listener, para caso seja null o nome, por exemplo, retornar mens.inv
+	}
+	
+	
+		
+	
+	
 }
