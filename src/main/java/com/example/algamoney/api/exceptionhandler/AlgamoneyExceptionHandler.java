@@ -35,7 +35,9 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
                                                               		// sem parâmetro extra eu passo "null"
 		String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.getCause().toString();
+		
+		// Trata o @RequestBody, se for null e se não for null
+		String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		// Criei um Array para se diferenciar do List erro do método abaixo "MethodArgumentNotValidException"
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		// Trata a exceção                          // tratando o body                                // tratando o status
