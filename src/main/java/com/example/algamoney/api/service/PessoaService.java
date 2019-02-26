@@ -33,7 +33,8 @@ public class PessoaService {
 			pessoaRepository.save(pessoaSalva);
 		}
 		
-		private Pessoa buscarPessoaPeloCodigo(Long codigo) {
+		// PUBLIC para também poder usá-lo no "LancamentoService"
+		public Pessoa buscarPessoaPeloCodigo(Long codigo) {
 			Pessoa pessoaSalva = pessoaRepository.findOne(codigo);
 			// Ao tentar atualizar uma pessoa com o código inexistente, dá Status 500 (Erro Server)
 			// pois "pessoaSalva" , no método "findOne" não pode ser nula, por isso a criação do If

@@ -1,5 +1,7 @@
 package com.example.algamoney.api.model;
 
+import java.beans.Transient;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pessoa")
@@ -59,6 +63,14 @@ public class Pessoa {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	// Para o Json e o Hibernate não pensar que "isInativo" é uma propriedade, por causa do "is"
+	// coloca-se esses:
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
 	}
 
 	@Override
