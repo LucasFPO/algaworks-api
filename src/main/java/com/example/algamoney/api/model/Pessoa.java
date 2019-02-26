@@ -17,10 +17,11 @@ public class Pessoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
-	@NotNull
+	@NotNull // impede que o nome seja igual a null no postman, ela será validada com o @Valid
+	// no "ResponseEntity", no resource. A mensagem emitida está no file "ValidationMessages.properties"
 	private String nome;
 
-	@NotNull
+	@NotNull // impede que o ativo seja igual a null no postman...
 	private Boolean ativo;
 
 	@Embedded // Uma nova classe "Endereco" ligada à "Pessoa" para evitar baixa coesão (classe muito grande)

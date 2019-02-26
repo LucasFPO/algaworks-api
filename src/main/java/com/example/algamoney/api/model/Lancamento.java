@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "lancamento")
@@ -22,26 +23,32 @@ public class Lancamento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
+	@NotNull
 	private String descricao;
 
+	@NotNull
 	@Column(name = "data_vencimento")
 	private LocalDate dataVencimento;
 
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
 
+	@NotNull
 	private BigDecimal valor;
 
 	private String observacao;
 
+	@NotNull
 	// "EnumType" tem STRING (RECEITA OU DESPESA) e ORDINAL (0 ou 1), tanto faz, mas STRING é mais straightforward
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")// Relacionamento para a coluna "codigo_categoria" definida no V03
 	private Categoria categoria;
-
+	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")// Relacionamento para a coluna "codigo_pessoa" definida no V03
 	private Pessoa pessoa;
