@@ -1,12 +1,19 @@
+//                            PENSAMENTO REST
+// SE EU MUDAR O "CODIGO", POR EXEMPLO, NA REQUISIÇÃO DO POSTMAN, NO ARQUIVO JSON
+// O ERRO, CASO EXISTA, DEVE SER 4.. (erro do cliente)
+// ERRO 5.. É SÓ SE EU NÃO MUDAR NADA DA REQUISIÇÃO (parte de cima do postman)
+
 package com.example.algamoney.api.exceptionhandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +38,7 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 	// captura as mensagens que eu não consegui ler na resposta do Postman,
 	// ao por exemplo, dar 400 Bad Request (tentando criar atributo que não existe)
 	@Override
+	//" HttpMessageNotReadable" aparece como Exception no Postman ao ocorrer o erro.
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
                                                               		// sem parâmetro extra eu passo "null"
@@ -70,7 +78,14 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 	 * public void handleEmptyResultDataAccessException() {
 	 * } */
 	
-	
+	@ExceptionHandler({ DataIntegrityViolationException.class } )
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null, LocaleContextHolder.getLocale());
+		// "mensagemDesenvolvedor" alterada pela dependency pom.xml "apache" 
+		String mensagemDesenvolvedor = ExceptionUtils.getRootCauseMessage(ex);
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
 	                                     // local da lista de erros
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
