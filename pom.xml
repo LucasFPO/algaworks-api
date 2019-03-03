@@ -84,6 +84,14 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		
+		<!-- Segurança Oauth -->
+		<dependency>
+			<groupId>org.springframework.security.oauth</groupId>
+			<artifactId>spring-security-oauth2</artifactId>
+		
+		</dependency>
+		
+		
 		<!-- Metamodel -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

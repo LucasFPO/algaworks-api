@@ -30,10 +30,10 @@ import com.example.algamoney.api.repository.CategoriaRepository;
 public class CategoriaResource {
 	
 	@Autowired // Ache uma implementação de "CategoriaRepository" e injete no objeto 
-	// "categoriaRepository"
+	// "categoriaRepository" (SE NÃO FOSSE INJETADO, ERA @Override)
 	private CategoriaRepository categoriaRepository;
 	
-	@Autowired
+	@Autowired // (SE NÃO FOSSE INJETADO, ERA @Override)
 	private ApplicationEventPublisher publisher;
 	
 	@GetMapping // Mapeamento do MÉTODO/VERBO HTTP GET para a URL "/categorias"
