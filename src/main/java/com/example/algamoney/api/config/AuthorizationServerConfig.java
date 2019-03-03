@@ -28,11 +28,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.withClient("angular") // CLIENTE, e não, USUÁRIO
 			.secret("@ngul@r0") // senha CLIENTE, e não, USUÁRIO
 			.scopes("read", "write") // limita o acesso. (Ex: você tem acesso à leitura e escrita)
-			.authorizedGrantTypes("password") // o angular recebe o usuário e senha e envia para pegar o AcessToken
-			.accessTokenValiditySeconds(1800); // tempo em que o Token fica ativo (1800s:60 = 30min)
+			.authorizedGrantTypes("password", "refresh_token") // o angular recebe o usuário e senha e envia para pegar o AcessToken
+			.accessTokenValiditySeconds(1800) // tempo em que o Token fica ativo (1800s:60 = 30min)
+			.refreshTokenValiditySeconds(3600 * 24); // Duração de 1 dia
 		
-		// Depois de 30min, o Access Token é expirado, e novamente precisa se fazer uma requisição
-		// com POST para receber um novo Token.
+			// Depois de 30min, o Access Token é expirado, e novamente precisa se fazer uma requisição
+			// com POST para receber um novo Token.
+		
+			// REFRESH-TOKEN: depois que o Token é expirado, eu solicito um novo Token com Refresh-Token
+			// a ideia é que o usuário possa sempre dar refresh, por isso o tempo de 1 dia. Já não preciso
+			// mais passar o "usuário" e "senha"
+			
+			// REFRESH-TOKEN RETORNA UM NOVO ACCESS TOKEN
 	}
 	
 	@Override
@@ -40,6 +47,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		endpoints
 			.tokenStore(tokenStore())
 			.accessTokenConverter(accessTokenConverter()) // Adicionado com a implementação JWT
+			.reuseRefreshTokens(false) // Um novo Token é gerado, não podendo reutilizar
 			.authenticationManager(authenticationManager);
 	}
 	
