@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 
 @Configuration
@@ -23,22 +25,36 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		// poderia colocar clients.jdbc (para banco de dados)
 		clients.inMemory() // servirá para o cliente em Angular
-			.withClient("angular")
-			.secret("@ngul@r0")
+			.withClient("angular") // CLIENTE, e não, USUÁRIO
+			.secret("@ngul@r0") // senha CLIENTE, e não, USUÁRIO
 			.scopes("read", "write") // limita o acesso. (Ex: você tem acesso à leitura e escrita)
 			.authorizedGrantTypes("password") // o angular recebe o usuário e senha e envia para pegar o AcessToken
 			.accessTokenValiditySeconds(1800); // tempo em que o Token fica ativo (1800s:60 = 30min)
+		
+		// Depois de 30min, o Access Token é expirado, e novamente precisa se fazer uma requisição
+		// com POST para receber um novo Token.
 	}
 	
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
 			.tokenStore(tokenStore())
+			.accessTokenConverter(accessTokenConverter()) // Adicionado com a implementação JWT
 			.authenticationManager(authenticationManager);
+	}
+	
+	//Bloco de código adicionado com a implementação JWT
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
+		accessTokenConverter.setSigningKey("algaworks");
+		return accessTokenConverter;
 	}
 	
 	@Bean // armazenamento do Token
 	public TokenStore tokenStore() {
-		return new InMemoryTokenStore();
+		return new JwtTokenStore(accessTokenConverter());
+		/* Necessário quando não tinha a implementação do JWT
+		 * return new InMemoryTokenStore(); // Token armazenado inMemory */
 	}
 }
