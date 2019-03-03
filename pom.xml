@@ -78,6 +78,12 @@
 			<version>3.4</version>
 		</dependency>
 		
+		<!-- Segurança Basic (pede usuário e senha) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		
 		<!-- Metamodel -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
