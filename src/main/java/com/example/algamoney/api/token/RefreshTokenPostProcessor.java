@@ -57,6 +57,5 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 		refreshTokenCookie.setMaxAge(2592000);
 		resp.addCookie(refreshTokenCookie);
 	}
-	// A aplicação não sabe pegar o Refresh Token do cookie, e colocá-la de volta na Requisição
-	//(observar Postman, desmarcando o "refresh_token" na requisição, verá que terá como resposta um erro)
+
 }

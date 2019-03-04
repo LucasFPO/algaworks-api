@@ -18,6 +18,12 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+
+//A aplicação não sabe pegar o Refresh Token do cookie, e colocá-la de volta na Requisição
+//(observar Postman, desmarcando o "refresh_token" na requisição, verá que terá como resposta um erro)
+
+// Por isso a criação dessa classe
+
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)// alta prioridade (analisa a requisição antes de tudo)
 public class RefreshTokenCookiePreProcessorFilter implements Filter {

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,11 @@ public class CategoriaResource {
 	@Autowired // (SE NÃO FOSSE INJETADO, ERA @Override)
 	private ApplicationEventPublisher publisher;
 	
+	// No OAuth, a implementação do @CrossOrigin não fica boa. Se eu utilizar outra segurança, ai ele é viável.
+	// Por esse motivo foi criado o CrosFilter.java
+	
+	              // parâmetros são opcionais
+	/* @CrossOrigin (maxAge = 10, origins = { "http://localhost:8000" }) // Implementação do CORS (Cross-Origin Http request) */
 	@GetMapping // Mapeamento do MÉTODO/VERBO HTTP GET para a URL "/categorias"
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
