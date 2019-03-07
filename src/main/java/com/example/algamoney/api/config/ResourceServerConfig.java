@@ -3,7 +3,9 @@ package com.example.algamoney.api.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,10 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 
 @Configuration // não é necessário esse @, mas ja mostra que é uma configuração
 @EnableWebSecurity
 @EnableResourceServer
+@EnableGlobalMethodSecurity(prePostEnabled = true) // Pega os GET, POST, DELETE...
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
 
@@ -38,8 +42,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		// apenas "categorias" tem acesso liberado, sem precisar de usuário ou senha
-				.antMatchers("/categorias").permitAll()
+		/* // apenas "categorias" tem acesso liberado, sem precisar de usuário ou senha (COM A INCLUSÃO DAS PERMISSÕES, ELA É DESNECESSARIA)
+				.antMatchers("/categorias").permitAll() */
 				.anyRequest().authenticated()
 				.and()
 			/* REMOVIDO PARA IMPLEMENTAR OAuth	// modo de autenticação: Basic
@@ -59,5 +63,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Bean
+	public MethodSecurityExpressionHandler createExpressionHandler() {
+		// Handler para conseguir fazer a segurança dos metodos ao modelo OAuth2
+		return new OAuth2MethodSecurityExpressionHandler();
 	}
 }

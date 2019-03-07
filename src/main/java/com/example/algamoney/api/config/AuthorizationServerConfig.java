@@ -27,10 +27,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory() // servirá para o cliente em Angular
 			.withClient("angular") // CLIENTE, e não, USUÁRIO
 			.secret("@ngul@r0") // senha CLIENTE, e não, USUÁRIO
-			.scopes("read", "write") // limita o acesso. (Ex: você tem acesso à leitura e escrita)
+			.scopes("read", "write") // limita o acesso. (Ex: você tem acesso à leitura e escrita) Ver CategoriaResource.java
 			.authorizedGrantTypes("password", "refresh_token") // o angular recebe o usuário e senha e envia para pegar o AcessToken
 			.accessTokenValiditySeconds(1800) // tempo em que o Token fica ativo (1800s:60 = 30min)
-			.refreshTokenValiditySeconds(3600 * 24); // Duração de 1 dia
+			.refreshTokenValiditySeconds(3600 * 24) // Duração de 1 dia
 		
 			// Depois de 30min, o Access Token é expirado, e novamente precisa se fazer uma requisição
 			// com POST para receber um novo Token.
@@ -40,6 +40,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			// mais passar o "usuário" e "senha"
 			
 			// REFRESH-TOKEN RETORNA UM NOVO ACCESS TOKEN
+		
+		// As permissões para o cliente "angular" nem sempre são as mesmas para o "mobile", vide scopes 
+		.and()
+			.withClient("mobile")
+			.secret("m0b1l30")
+			.scopes("read")
+			.authorizedGrantTypes("password", "refresh_token")
+			.accessTokenValiditySeconds(1800)
+			.refreshTokenValiditySeconds(3600 * 24);
 	}
 	
 	@Override

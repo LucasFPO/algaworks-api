@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,11 +44,13 @@ public class CategoriaResource {
 	              // parâmetros são opcionais
 	/* @CrossOrigin (maxAge = 10, origins = { "http://localhost:8000" }) // Implementação do CORS (Cross-Origin Http request) */
 	@GetMapping // Mapeamento do MÉTODO/VERBO HTTP GET para a URL "/categorias"
-	public List<Categoria> listar() {
-		return categoriaRepository.findAll();
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')") // permissões para acesso
+		public List<Categoria> listar() {
+			return categoriaRepository.findAll();
 	}
 	
 	@PostMapping // Salvar a categoria
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')") // permissões para acesso
 	// Criando uma categoria ex: Financiamento no Postman, ela é salva aqui
 	/* @ResponseStatus(HttpStatus.CREATED)// ao terminar a execução do método, quero
 	// que retorne o status CREATED ("RESPONSE" SUBSTITUTIDO PELO CODIGO "RETURN" E "RESPONSEENTITY") */
@@ -73,6 +76,7 @@ public class CategoriaResource {
 	// O código do "Location" criado irá ir para a variável "código" criada
 	// eu busco ele com o "findOne" e consigo retornar a categoria desejada
 	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')") // permissões para acesso
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
 		 Categoria categoria = categoriaRepository.findOne(codigo);
 		 // Se o código for inexistente, retorna 404, do contrario da o codigo certo //
