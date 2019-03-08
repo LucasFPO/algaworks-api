@@ -69,8 +69,8 @@ public class CategoriaResource {
 			// Cria o status e retorna na resposta "Response = resposta"
 			return ResponseEntity.created(uri).body(categoriaSalva); */
 		
-		publisher.publishEvent(new RecursoCriadoEvent(this, response, pessoaSalva.getCodigo()));
-		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
+		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
+		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
 	}
 	
 	// O código do "Location" criado irá ir para a variável "código" criada

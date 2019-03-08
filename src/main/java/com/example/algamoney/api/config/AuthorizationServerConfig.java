@@ -70,8 +70,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	
 	@Bean // armazenamento do Token
 	public TokenStore tokenStore() {
+		// o JwtTokenStore ele não armazena, na verdade ele apenas valida
 		return new JwtTokenStore(accessTokenConverter());
 		/* Necessário quando não tinha a implementação do JWT
 		 * return new InMemoryTokenStore(); // Token armazenado inMemory */
 	}
 }
+
+
