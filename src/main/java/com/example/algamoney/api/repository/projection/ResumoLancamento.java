@@ -27,6 +27,7 @@ public class ResumoLancamento {
 		this.dataPagamento = dataPagamento;
 		this.valor = valor;
 		this.tipo = tipo;
+		// Categoria e Pessoa são tratados aqui como String. No resumo não aparece o endereço, rua, etc...
 		this.categoria = categoria;
 		this.pessoa = pessoa;
 	}
